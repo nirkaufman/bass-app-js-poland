@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The 60 FPS Slap: Real-Time DSP in WebGL</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #050508;
+      font-family: 'Courier New', monospace;
+      color: #00ffcc;
+    }
+    #canvas-container {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+    }
+    #hud {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      pointer-events: none;
+      z-index: 10;
+      background: rgba(0, 0, 0, 0.65);
+      padding: 16px 24px;
+      border-left: 3px solid #00ffcc;
+      border-radius: 4px;
+      min-width: 180px;
+    }
+    #hud h1 {
+      margin: 0 0 8px 0;
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      opacity: 0.7;
+    }
+    #hud p {
+      margin: 4px 0;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    #hud p span:first-child { opacity: 0.6; }
+    #note-display { font-size: 1.4rem; font-weight: bold; }
+    #status {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 10;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      background: rgba(0, 0, 0, 0.65);
+      padding: 8px 14px;
+      border-radius: 4px;
+    }
+    #status.live { color: #ff4d6d; }
+    #status.blocked { color: #ffb020; }
+    #status .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+      margin-right: 6px;
+    }
+    #controls {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    button {
+      background: #00ffcc;
+      border: none;
+      color: #050508;
+      padding: 12px 28px;
+      font-size: 1rem;
+      font-weight: bold;
+      font-family: inherit;
+      cursor: pointer;
+      border-radius: 4px;
+      letter-spacing: 1px;
+    }
+    button:hover { background: #33ffdd; }
+    button:disabled {
+      background: #444;
+      color: #888;
+      cursor: not-allowed;
+    }
+    #error-msg {
+      color: #ff4d6d;
+      font-size: 0.85rem;
+      max-width: 60vw;
+      text-align: center;
+      display: none;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <div id="hud">
+    <h1>DSP TELEMETRY</h1>
+    <p><span>NOTE</span><span id="note-display">--</span></p>
+    <p><span>FREQ</span><span id="freq-display">0.0 Hz</span></p>
+    <p><span>RMS</span><span id="rms-display">0.000</span></p>
+    <p><span>FPS</span><span id="fps-display">--</span></p>
+    <p><span>LATENCY</span><span id="latency-display">--</span></p>
+  </div>
+  <div id="status" class="idle"><span class="dot"></span><span id="status-text">IDLE</span></div>
+  <div id="controls">
+    <button id="start-btn" autofocus>ENGAGE AUDIO WORKLET</button>
+    <div id="error-msg"></div>
+  </div>
+  <div id="canvas-container"></div>
+  <script src="app.js"></script>
+</body>
+</html>

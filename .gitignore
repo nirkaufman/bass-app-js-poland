@@ -1,0 +1,11 @@
+# Talk-prep files (kept local)
+live-edits-cheatsheet.md
+SESSION-CONTEXT.md
+talk-walkthrough.md
+stage.mjs
+ja-poland-slides.key
+slides/
+
+# Editor / OS
+.idea/
+.DS_Store
