@@ -9,9 +9,6 @@ bass guitar signal via `getUserMedia`, analyzes pitch/dynamics/transients off th
 an `AudioWorklet`, and drives a reactive Three.js/GLSL scene at display rate. Built as a 20-minute
 conference talk demo ("The 60 FPS Slap", JS Poland 2026).
 
-**Talk prep:** start with `SESSION-CONTEXT.md` (decisions, state, what's verified). The script and
-runbook is `talk-walkthrough.md`, and the slide copy is `slide-deck-notes.md`.
-
 ## Running it
 
 No build step, no package.json. Serve the directory statically on a **fixed port** (Chrome
@@ -27,19 +24,6 @@ Then visit `http://localhost:8000`. A secure context is required: `getUserMedia`
 the on-stage fallback, and it's also how to test without a bass.
 
 There are no lint, test, or build commands.
-
-## Stage state (live-coding)
-
-The talk live-codes two GLSL lines in `app.js` (slap → spikes, slap → flash).
-
-```bash
-node stage.mjs start   # replace them with TODO comments (on-stage starting point)
-node stage.mjs final   # restore them (finished demo)
-```
-
-These are exact-text swaps, and the script refuses to write if `app.js` drifted. **If you edit either
-line, update `LIVE_EDITS` in `stage.mjs` too.** Check which state the repo is in (grep for `TODO: slap`)
-before editing the shaders.
 
 ## Architecture
 

@@ -31,7 +31,6 @@ Main thread: store latest → requestAnimationFrame
 - `index.html`: app shell, canvas, telemetry HUD
 - `app.js`: Web Audio graph, worklet wiring, Three.js scene, shaders, render loop
 - `bass-processor.js`: the `AudioWorkletProcessor` (ring buffer, pitch, RMS, transients)
-- `stage.mjs`: talk helper that strips and restores the two live-coded shader lines
 
 ## Running
 
