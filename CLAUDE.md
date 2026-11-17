@@ -52,7 +52,8 @@ should be preserved when editing:
     transient, and sets `targetHue = log2(freq / C0) % 1`, so one octave is one trip around the
     color wheel.
   - **Frame loop:** `requestAnimationFrame` does all drawing. It smooths with time-based
-    exponentials (frame-rate independent, so it behaves the same on 120 Hz displays) and
+    exponentials (frame-rate independent, so it behaves the same on 120 Hz displays),
+    saturates loudness at `LEVEL_MAX` (so only `uPunch` can make the sphere jump on a slap), and
     writes the uniforms `uTime`, `uLevel`, `uPunch` and `uHue`. It updates the HUD, including
     FPS and output latency (`baseLatency + outputLatency`).
   - **J key:** busy-blocks the main thread for 3 s, to prove the audio keeps running.
@@ -74,5 +75,8 @@ should be preserved when editing:
   25 Hz in the window.
 - Keep the direct `source → dspNode → destination` path. It's both the low-latency monitor and
   the thing the J-freeze demo proves.
-- Visual tuning knobs: `LEVEL_GAIN` in `app.js` (match it to the input gain at soundcheck),
-  `TRANSIENT_THRESHOLD` in `bass-processor.js`, and the `0.4` / `0.5` punch amounts in the shaders.
+- Visual tuning knobs: `LEVEL_GAIN` and `LEVEL_MAX` in `app.js` (match the gain to the input at
+  soundcheck; the max is the loudness ceiling), `TRANSIENT_THRESHOLD` in `bass-processor.js`, and
+  the `0.6` / `0.7` punch amounts in the shaders.
+- Keep the loudness response calm and the punch response large. The demo depends on a slap
+  looking ordinary through `uLevel` alone and dramatic through `uPunch`.

@@ -60,7 +60,7 @@
     void main() {
       vNormal = normal;
       float displacement = sin(position.y * 6.0 + uTime * 3.0) * uLevel;
-      displacement += uPunch * 0.4 * abs(sin(position.x * 8.0) * sin(position.z * 8.0));
+      displacement += uPunch * 0.6 * abs(sin(position.x * 8.0) * sin(position.z * 8.0));
       vec3 newPosition = position + normal * displacement;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
     }
@@ -83,7 +83,7 @@
       vec3 color = hsv2rgb(vec3(uHue, 0.85, 0.9));
       float rim = 1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0);
       color += vec3(rim * (0.3 + uLevel * 0.8));
-      color = mix(color, vec3(1.0), uPunch * 0.5);
+      color = mix(color, vec3(1.0), uPunch * 0.7);
       gl_FragColor = vec4(color, 1.0);
     }
   `;
@@ -109,6 +109,7 @@
   // Audio pipeline
   // ---------------------------------------------------------------------
   const LEVEL_GAIN = 1.5; // RMS → displacement; tune at soundcheck to your input gain
+  const LEVEL_MAX = 0.15; // loudness ceiling: a slap swells no more than a firm note
 
   let audioCtx = null;
   let telemetry = { freq: -1, rms: 0 }; // latest message from the audio thread
@@ -228,10 +229,12 @@
     const dt = clock.getDelta();
 
     // Exponential smoothing in seconds, not frames: identical at 60 or 120 Hz.
-    level += (telemetry.rms * LEVEL_GAIN - level) * (1 - Math.exp(-dt * 10));
+    // Loudness saturates at LEVEL_MAX, so only uPunch can make the sphere jump.
+    const targetLevel = LEVEL_MAX * Math.tanh((telemetry.rms * LEVEL_GAIN) / LEVEL_MAX);
+    level += (targetLevel - level) * (1 - Math.exp(-dt * 6));
     const hueStep = targetHue - hue;
     hue += (hueStep - Math.round(hueStep)) * (1 - Math.exp(-dt * 6)); // short way round the wheel
-    punch *= Math.exp(-dt * 8);
+    punch *= Math.exp(-dt * 5);
 
     uniforms.uTime.value = clock.elapsedTime;
     uniforms.uLevel.value = level;
